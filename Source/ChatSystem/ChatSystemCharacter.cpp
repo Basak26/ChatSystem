@@ -53,6 +53,9 @@ AChatSystemCharacter::AChatSystemCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+
+	//ChatText = CreateDefaultSubobject<UTextRenderComponent>("ChatText");
+	// ChatText->SetHorizontalAlignment(EHTA_Center); 13:00
 }
 
 

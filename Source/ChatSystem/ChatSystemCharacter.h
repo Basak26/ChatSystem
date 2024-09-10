@@ -67,6 +67,8 @@ public:
 	UFUNCTION()
 	void OnRep_CurrentMessage();
 
+	void UpdateChatText();
+
 protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Transient, ReplicatedUsing = OnRep_CurrentMessage, Category = "Chat/Messaging")
