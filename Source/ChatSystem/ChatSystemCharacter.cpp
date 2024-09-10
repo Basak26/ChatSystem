@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "Net/UnrealNetwork.h"
+#include "Components/TextRenderComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -54,8 +55,10 @@ AChatSystemCharacter::AChatSystemCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
-	//ChatText = CreateDefaultSubobject<UTextRenderComponent>("ChatText");
-	// ChatText->SetHorizontalAlignment(EHTA_Center); 13:00
+	ChatText = CreateDefaultSubobject<UTextRenderComponent>(TEXT("ChatText"));
+	ChatText->SetRelativeLocation(FVector(0, 0, 100));
+	ChatText->SetHorizontalAlignment(EHTA_Center);
+	ChatText->SetupAttachment(GetRootComponent());
 }
 
 
@@ -69,14 +72,29 @@ void AChatSystemCharacter::BeginPlay()
 
 void AChatSystemCharacter::AttemptToSendChatMessage(const FString& Message)
 {
+	if (!HasAuthority())
+	{
+		ServerSendChatMessage(Message);
+	}
+	else
+	{
+		SendChatMessage(Message);
+	}
 }
 
 void AChatSystemCharacter::SendChatMessage(const FString& Message)
 {
+	CurrentMessage = Message;
+	UpdateChatText();
+
+	FTimerHandle TimerHandle;
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AChatSystemCharacter::ClearChatMessage, 5.0f);
 }
 
 void AChatSystemCharacter::ClearChatMessage()
 {
+	CurrentMessage = "";
+	UpdateChatText();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -116,16 +134,29 @@ void AChatSystemCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 
 void AChatSystemCharacter::ServerSendChatMessage_Implementation(const FString& Message)
 {
-	CurrentMessage = Message;
+	SendChatMessage(Message);
 }
 
 bool AChatSystemCharacter::ServerSendChatMessage_Validate(const FString& Message)
 {
-	return false;
+	if (Message.Len() < 255)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void AChatSystemCharacter::OnRep_CurrentMessage()
 {
+	UpdateChatText();
+}
+
+void AChatSystemCharacter::UpdateChatText()
+{
+	ChatText->SetText(FText::FromString(CurrentMessage));
 }
 
 void AChatSystemCharacter::Move(const FInputActionValue& Value)
