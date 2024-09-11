@@ -62,12 +62,9 @@ AChatSystemCharacter::AChatSystemCharacter()
 	ChatText->SetHorizontalAlignment(EHTA_Center);
 	ChatText->SetupAttachment(GetRootComponent());
 
-	//UE_LOG(LogTemp, Error, TEXT("한국어 테스트"));
-
 	static ConstructorHelpers::FObjectFinder<UFont> FontAsset(TEXT("/Game/Font/Font_Kor.Font_Kor"));
 	if (FontAsset.Succeeded())
 	{
-		UE_LOG(LogTemplateCharacter, Error, TEXT("FontAsset is succeeded"));
 		ChatText->SetFont(FontAsset.Object);
 	}
 	else

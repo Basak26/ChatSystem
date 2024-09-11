@@ -17,6 +17,7 @@ void USendMessageWidget::NativeConstruct()
       //  InputModeData.SetWidgetToFocus(GetCachedWidget());
         PlayerController->SetInputMode(InputModeData);
         PlayerController->SetShowMouseCursor(true);
+        PlayerController->FlushPressedKeys();
     }
 
     if (MessageBox)
