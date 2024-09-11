@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+ï»¿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -52,6 +52,9 @@ class AChatSystemCharacter : public ACharacter
 public:
 	AChatSystemCharacter();
 
+	//class UTextRenderComponent* ChatText;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Chat", meta = (AllowPrivateAccess = "true"))
 	class UTextRenderComponent* ChatText;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
@@ -63,7 +66,7 @@ public:
 
 	void SendChatMessage(const FString& Message);
 	
-	// 5ÃÊ ÈÄ ¸Þ½ÃÁö »èÁ¦
+	// 5ì´ˆ í›„ ë©”ì‹œì§€ ì‚­ì œ
 	void ClearChatMessage();
 
 	UFUNCTION(Server, Reliable, WithValidation)

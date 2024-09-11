@@ -1,4 +1,4 @@
-// Copyright Epic Games, Inc. All Rights Reserved.
+ï»¿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "ChatSystemCharacter.h"
 #include "Engine/LocalPlayer.h"
@@ -12,6 +12,7 @@
 #include "InputActionValue.h"
 #include "Net/UnrealNetwork.h"
 #include "Components/TextRenderComponent.h"
+#include "Engine/Font.h"
 #include "SendMessageWidget.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -60,6 +61,19 @@ AChatSystemCharacter::AChatSystemCharacter()
 	ChatText->SetRelativeLocation(FVector(0, 0, 100));
 	ChatText->SetHorizontalAlignment(EHTA_Center);
 	ChatText->SetupAttachment(GetRootComponent());
+
+	//UE_LOG(LogTemp, Error, TEXT("í•œêµ­ì–´ í…ŒìŠ¤íŠ¸"));
+
+	//static ConstructorHelpers::FObjectFinder<UFont> FontAsset(TEXT("/Game/Font/NanumGothic_Font.NanumGothic_Font"));
+	//if (FontAsset.Succeeded())
+	//{
+	//	UE_LOG(LogTemplateCharacter, Error, TEXT("FontAsset is succeeded"));
+	//	ChatText->SetFont(FontAsset.Object);
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemplateCharacter, Error, TEXT("FontAsset is Failed"));
+	//}
 }
 
 
@@ -160,6 +174,7 @@ void AChatSystemCharacter::OnRep_CurrentMessage()
 void AChatSystemCharacter::UpdateChatText()
 {
 	ChatText->SetText(FText::FromString(CurrentMessage));
+	UE_LOG(LogTemplateCharacter, Warning, TEXT("Updating Chat Text with Message: %s"), *CurrentMessage);
 }
 
 void AChatSystemCharacter::Move(const FInputActionValue& Value)
@@ -205,11 +220,11 @@ void AChatSystemCharacter::ShowMessageBox(const FInputActionValue& Value)
 		APlayerController* PlayerController = Cast<APlayerController>(GetController());
 		if (PlayerController)
 		{
-			// ºí·çÇÁ¸°Æ®¿¡¼­ ¸¸µç À§Á¬ Å¬·¡½º ·Îµå
+			// ë¸”ë£¨í”„ë¦°íŠ¸ì—ì„œ ë§Œë“  ìœ„ì ¯ í´ë˜ìŠ¤ ë¡œë“œ
 			TSubclassOf<UUserWidget> SendMessageWidgetClass = LoadClass<UUserWidget>(nullptr, TEXT("/Game/ChatWidget/WBP_ChatWidget.WBP_ChatWidget_C"));
 			if (SendMessageWidgetClass)
 			{
-				// À§Á¬ ÀÎ½ºÅÏ½º »ı¼º
+				// ìœ„ì ¯ ì¸ìŠ¤í„´ìŠ¤ ìƒì„±
 				UUserWidget* WidgetInstance = CreateWidget<UUserWidget>(PlayerController, SendMessageWidgetClass);
 
 				if (WidgetInstance)
