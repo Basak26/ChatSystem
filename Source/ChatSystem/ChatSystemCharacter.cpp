@@ -64,16 +64,16 @@ AChatSystemCharacter::AChatSystemCharacter()
 
 	//UE_LOG(LogTemp, Error, TEXT("한국어 테스트"));
 
-	//static ConstructorHelpers::FObjectFinder<UFont> FontAsset(TEXT("/Game/Font/NanumGothic_Font.NanumGothic_Font"));
-	//if (FontAsset.Succeeded())
-	//{
-	//	UE_LOG(LogTemplateCharacter, Error, TEXT("FontAsset is succeeded"));
-	//	ChatText->SetFont(FontAsset.Object);
-	//}
-	//else
-	//{
-	//	UE_LOG(LogTemplateCharacter, Error, TEXT("FontAsset is Failed"));
-	//}
+	static ConstructorHelpers::FObjectFinder<UFont> FontAsset(TEXT("/Game/Font/Font_Kor.Font_Kor"));
+	if (FontAsset.Succeeded())
+	{
+		UE_LOG(LogTemplateCharacter, Error, TEXT("FontAsset is succeeded"));
+		ChatText->SetFont(FontAsset.Object);
+	}
+	else
+	{
+		UE_LOG(LogTemplateCharacter, Error, TEXT("FontAsset is Failed"));
+	}
 }
 
 

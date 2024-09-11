@@ -52,10 +52,10 @@ class AChatSystemCharacter : public ACharacter
 public:
 	AChatSystemCharacter();
 
-	//class UTextRenderComponent* ChatText;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Chat", meta = (AllowPrivateAccess = "true"))
 	class UTextRenderComponent* ChatText;
+
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Chat", meta = (AllowPrivateAccess = "true"))
+	//class UTextRenderComponent* ChatText;
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
 
