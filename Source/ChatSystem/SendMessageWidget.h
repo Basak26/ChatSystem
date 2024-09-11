@@ -17,5 +17,12 @@ class CHATSYSTEM_API USendMessageWidget : public UUserWidget
 
 protected:
 	virtual void NativeConstruct() override;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	TObjectPtr<class UEditableTextBox> MessageBox;
+
+public:
+	UFUNCTION()
+	void CommitedMessageBox(const FText& Text, ETextCommit::Type CommitType);
 	
 };

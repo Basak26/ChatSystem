@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
+#include "Blueprint/UserWidget.h"
 #include "ChatSystemCharacter.generated.h"
 
 class USpringArmComponent;
@@ -44,6 +45,10 @@ class AChatSystemCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
+	/* Show Message Box Action*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* ShowMessageBoxAction;
+
 public:
 	AChatSystemCharacter();
 
@@ -69,18 +74,21 @@ public:
 
 	void UpdateChatText();
 
-protected:
+	UPROPERTY()
+	UUserWidget* SendMessageWidget;
 
+protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Transient, ReplicatedUsing = OnRep_CurrentMessage, Category = "Chat/Messaging")
 	FString CurrentMessage;
-
 
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
-			
+
+	/* Called for Show Message Box input (Press F)*/
+	void ShowMessageBox(const FInputActionValue& Value);
 
 protected:
 	// APawn interface

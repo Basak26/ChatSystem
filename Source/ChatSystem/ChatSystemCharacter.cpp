@@ -12,6 +12,7 @@
 #include "InputActionValue.h"
 #include "Net/UnrealNetwork.h"
 #include "Components/TextRenderComponent.h"
+#include "SendMessageWidget.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -88,7 +89,7 @@ void AChatSystemCharacter::SendChatMessage(const FString& Message)
 	UpdateChatText();
 
 	FTimerHandle TimerHandle;
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AChatSystemCharacter::ClearChatMessage, 5.0f);
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AChatSystemCharacter::ClearChatMessage, 10.0f);
 }
 
 void AChatSystemCharacter::ClearChatMessage()
@@ -124,6 +125,8 @@ void AChatSystemCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInpu
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AChatSystemCharacter::Look);
 
+		// Show Message Box
+		EnhancedInputComponent->BindAction(ShowMessageBoxAction, ETriggerEvent::Triggered, this, &AChatSystemCharacter::ShowMessageBox);
 
 	}
 	else
@@ -194,6 +197,31 @@ void AChatSystemCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
 }
+
+void AChatSystemCharacter::ShowMessageBox(const FInputActionValue& Value)
+{
+	if (!SendMessageWidget)
+	{
+		APlayerController* PlayerController = Cast<APlayerController>(GetController());
+		if (PlayerController)
+		{
+			// 블루프린트에서 만든 위젯 클래스 로드
+			TSubclassOf<UUserWidget> SendMessageWidgetClass = LoadClass<UUserWidget>(nullptr, TEXT("/Game/ChatWidget/WBP_ChatWidget.WBP_ChatWidget_C"));
+			if (SendMessageWidgetClass)
+			{
+				// 위젯 인스턴스 생성
+				UUserWidget* WidgetInstance = CreateWidget<UUserWidget>(PlayerController, SendMessageWidgetClass);
+
+				if (WidgetInstance)
+				{
+					WidgetInstance->AddToViewport();
+					SendMessageWidget = WidgetInstance;
+				}
+			}
+		}
+	}
+}
+
 
 void AChatSystemCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
